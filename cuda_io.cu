@@ -23,6 +23,10 @@
 #include <fcntl.h>
 #include <unistd.h>     /* read(), close() */
 
+#ifdef _MSC_VER
+#include <io.h>
+#endif
+
 #include "kmeans.h"
 
 #define MAX_CHAR_PER_LINE 128
@@ -35,7 +39,7 @@ float** file_read(int   isBinaryFile,  /* flag: 0 or 1 */
                   int  *numCoords)     /* no. coordinates */
 {
     float **objects;
-    int     i, j, len;
+	int     i, j, len;
     ssize_t numBytesRead;
 
     if (isBinaryFile) {  /* input file is in raw binary format -------------*/
@@ -134,7 +138,7 @@ float** file_read(int   isBinaryFile,  /* flag: 0 or 1 */
         while (fgets(line, lineLen, infile) != NULL) {
             if (strtok(line, " \t\n") == NULL) continue;
             for (j=0; j<(*numCoords); j++)
-                objects[i][j] = atof(strtok(NULL, " ,\t\n"));
+                objects[i][j] = (float)atof(strtok(NULL, " ,\t\n"));
             i++;
         }
 

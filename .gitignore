@@ -25,3 +25,6 @@ gmon.out
 profiles
 *.cluster_centres
 *.membership
+
+# CMake build directories
+/build*

@@ -23,6 +23,10 @@
 #include <fcntl.h>
 #include <unistd.h>     /* read(), close() */
 
+#ifdef _MSC_VER
+#include <io.h>
+#endif
+
 #include "kmeans.h"
 
 #define MAX_CHAR_PER_LINE 128
@@ -40,10 +44,11 @@ float** file_read(int   isBinaryFile,  /* flag: 0 or 1 */
 
     if (isBinaryFile) {  /* input file is in raw binary format -------------*/
         int infile;
-        if ((infile = open(filename, O_RDONLY, "0600")) == -1) {
+        if ((infile = open(filename, O_RDONLY|O_BINARY, "0600")) == -1) {
             fprintf(stderr, "Error: no such file (%s)\n", filename);
             return NULL;
         }
+		assert(sizeof(int) == 4);
         numBytesRead = read(infile, numObjs,    sizeof(int));
         assert(numBytesRead == sizeof(int));
         numBytesRead = read(infile, numCoords, sizeof(int));
